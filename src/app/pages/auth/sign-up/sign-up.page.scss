@@ -1,0 +1,78 @@
+.form-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background: #1e1e1e; // Fondo oscuro para un look moderno
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  ion-item {
+    --background: transparent;
+    --border-radius: 8px;
+    --border-color: #444;
+    border: 1px solid var(--border-color);
+    margin-bottom: 12px;
+  }
+  
+  ion-label {
+    color: #ffffff; // Color blanco para buen contraste
+    font-size: 14px;
+  }
+  
+  ion-input {
+    color: #ffffff;
+  }
+  
+  ion-button {
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    --border-radius: 8px;
+    --background: #007bff; // Azul moderno
+    --background-hover: #0056b3;
+  }
+  
+  ion-text[color="danger"] {
+    font-weight: bold;
+  }
+  
+  ion-icon-button {
+    color: #ccc;
+  }
+  
+  ion-button[disabled] {
+    opacity: 0.5;
+  }
+
+  ion-item.password-item {
+    display: flex;
+    align-items: center;
+    --background: transparent;
+    --border-radius: 8px;
+    --border-color: #444;
+    border: 1px solid var(--border-color);
+    margin-bottom: 12px;
+    position: relative;
+  }
+  
+  ion-input {
+    flex: 1;
+    color: #ffffff;
+  }
+  
+  ion-icon{
+    transform: scale(1.5) translate(-10px, 0px);
+
+}
+
+.input-icons {
+    display: flex;
+    gap: 20px;
+    // align-items: center; 
+  }
+  
+  .icon {
+    font-size: 20px;
+  }
+  

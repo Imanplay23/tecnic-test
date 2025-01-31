@@ -1,0 +1,71 @@
+<ion-content [fullscreen]="true">
+  <div class="form">
+    <div class="form-container">
+      <form>
+        <ion-item>
+          <ion-label position="floating"
+            >Name <ion-text color="danger">*</ion-text></ion-label
+          >
+          <ion-input required formControlName="names" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating"
+            >Last name <ion-text color="danger">*</ion-text></ion-label
+          >
+          <ion-input
+            required
+            formControlName="lastNames"
+            type="text"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating"
+            >Email <ion-text color="danger">*</ion-text></ion-label
+          >
+          <ion-input required formControlName="email" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Telephone number</ion-label>
+          <ion-input formControlName="telNumber" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item class="password-item">
+          <ion-label position="floating">Password <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            required
+            formControlName="password"
+            [type]="hide ? 'password' : 'text'">
+            <div slot="end" class="input-icons">
+              <ion-icon class="icon" slot="end" color="signup" [name]=" passwordShown === true ? 'eye' : 'eye-off'"
+                (click)="togglePassword()"></ion-icon>
+            </div>
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="password-item">
+          <ion-label position="floating">Confirm Password <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            required
+            formControlName="confirmPassword"
+            [type]="hide ? 'password' : 'text'">
+            <div slot="end" class="input-icons">
+              <ion-icon class="icon" slot="end" color="signup" [name]=" passwordShown === true ? 'eye' : 'eye-off'"
+                (click)="togglePassword()"></ion-icon>
+            </div>
+        </ion-input>
+        </ion-item>
+
+        <ion-button block color="primary" type="submit" [disabled]="">
+          Sing Up
+        </ion-button>
+      </form>
+    </div>
+    <hr />
+    <span class="small-text log-in-redirect">
+      Already have an acocount? <a routerLink="/auth/login">Log in</a>
+    </span>
+  </div>
+</ion-content>
