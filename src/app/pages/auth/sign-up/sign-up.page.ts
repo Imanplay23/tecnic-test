@@ -1,19 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { 
   FormBuilder, 
-  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
-
-interface SingUpForm {
-  names: FormControl<string>,
-  lastNames: FormControl<string>,
-  email: FormControl<string>,
-  telNumber: FormControl<string>,
-  password: FormControl<string>,
-  confirmPassword: FormControl<string>,
-}
+import { SingUpForm } from 'src/app/interfaces/users.interface';
 
 @Component({
   standalone: false,
@@ -22,8 +13,6 @@ interface SingUpForm {
   styleUrls: ['./sign-up.page.scss'],
 })
 export class SignUpPage {
- hide: boolean = true;
-
  public passwordType: string = 'password';
  public passwordShown: boolean = false;
 
@@ -32,11 +21,7 @@ export class SignUpPage {
     formBuilder = inject(FormBuilder);
 
     form: FormGroup<SingUpForm> = this.formBuilder.group({
-        names: this.formBuilder.control('', {
-            validators: Validators.required,
-            nonNullable: true,
-        }),
-        lastNames: this.formBuilder.control('', {
+        fullNames: this.formBuilder.control('', {
             validators: Validators.required,
             nonNullable: true,
         }),

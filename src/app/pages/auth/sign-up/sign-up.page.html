@@ -1,23 +1,13 @@
 <ion-content [fullscreen]="true">
   <div class="form">
+    <h1>Sign Up</h1>
     <div class="form-container">
       <form>
         <ion-item>
           <ion-label position="floating"
-            >Name <ion-text color="danger">*</ion-text></ion-label
+            >Nombre completo <ion-text color="danger">*</ion-text></ion-label
           >
           <ion-input required formControlName="names" type="text"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating"
-            >Last name <ion-text color="danger">*</ion-text></ion-label
-          >
-          <ion-input
-            required
-            formControlName="lastNames"
-            type="text"
-          ></ion-input>
         </ion-item>
 
         <ion-item>
@@ -28,16 +18,16 @@
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Telephone number</ion-label>
+          <ion-label position="floating">Numero de telefono (opcional)</ion-label>
           <ion-input formControlName="telNumber" type="text"></ion-input>
         </ion-item>
 
         <ion-item class="password-item">
-          <ion-label position="floating">Password <ion-text color="danger">*</ion-text></ion-label>
+          <ion-label position="floating">Contraseña <ion-text color="danger">*</ion-text></ion-label>
           <ion-input
             required
             formControlName="password"
-            [type]="hide ? 'password' : 'text'">
+            [type]="!passwordShown ? 'password' : 'text'">
             <div slot="end" class="input-icons">
               <ion-icon class="icon" slot="end" color="signup" [name]=" passwordShown === true ? 'eye' : 'eye-off'"
                 (click)="togglePassword()"></ion-icon>
@@ -46,11 +36,11 @@
         </ion-item>
 
         <ion-item class="password-item">
-          <ion-label position="floating">Confirm Password <ion-text color="danger">*</ion-text></ion-label>
+          <ion-label position="floating">Confirmar contraseña <ion-text color="danger">*</ion-text></ion-label>
           <ion-input
             required
             formControlName="confirmPassword"
-            [type]="hide ? 'password' : 'text'">
+            [type]="!passwordShown ? 'password' : 'text'">
             <div slot="end" class="input-icons">
               <ion-icon class="icon" slot="end" color="signup" [name]=" passwordShown === true ? 'eye' : 'eye-off'"
                 (click)="togglePassword()"></ion-icon>
@@ -65,7 +55,7 @@
     </div>
     <hr />
     <span class="small-text log-in-redirect">
-      Already have an acocount? <a routerLink="/auth/login">Log in</a>
+      Already have an acocount? <a routerLink="/login">Log in</a>
     </span>
   </div>
 </ion-content>

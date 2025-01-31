@@ -1,15 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { 
   FormBuilder, 
-  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
-
-interface LoginForm {
-  email: FormControl<string>,
-  password: FormControl<string>,
-}
+import { LoginForm } from 'src/app/interfaces/users.interface';
 
 @Component({
   standalone: false,

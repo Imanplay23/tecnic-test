@@ -1,20 +1,14 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
  <div class="form">
   <div class="form-container">
     <h1>Log In</h1>
     <form>
       <ion-item>
-        <ion-label position="floating">E-Mail <ion-text color="danger">*</ion-text></ion-label>
+        <ion-label position="floating">Email <ion-text color="danger">*</ion-text></ion-label>
         <ion-input required formControlName="email" type="text"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Password <ion-text color="danger">*</ion-text></ion-label>
+        <ion-label position="floating">Contraseña <ion-text color="danger">*</ion-text></ion-label>
         <ion-input required formControlName="password" type="text"></ion-input>
       </ion-item>
       <ion-button block color="primary" type="submit" [disabled]="">
@@ -23,7 +17,7 @@
     </form>
   </div>
   <span class="small-text log-in-redirect">
-    Don't have an account yet? <a routerLink="/auth/sign-up">Log In</a>
+    Don't have an account yet? <a routerLink="/sign-up">Sign Up</a>
   </span>
  </div>
 </ion-content>
