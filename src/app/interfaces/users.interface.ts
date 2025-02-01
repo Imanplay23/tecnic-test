@@ -14,3 +14,21 @@ export interface LoginForm {
   email: FormControl<string>,
   password: FormControl<string>,
 }
+
+export interface Credential {
+  email: string,
+  password: string,
+}
+
+export interface SignUpData {
+  nombre: string;
+  email: string;
+  telefono: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface logInData {
+  identifier: string,
+  password: string,
+}

@@ -4,7 +4,9 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { SingUpForm } from 'src/app/interfaces/users.interface';
+import { Credential, SignUpData, SingUpForm } from 'src/app/interfaces/users.interface';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: false,
@@ -16,7 +18,7 @@ export class SignUpPage {
  public passwordType: string = 'password';
  public passwordShown: boolean = false;
 
-  constructor() { }
+  constructor(private authService: AuthService, private router: Router) { }
 
     formBuilder = inject(FormBuilder);
 
@@ -67,22 +69,13 @@ export class SignUpPage {
       }
     }
 
-    async singUp(): Promise<void> {
-        if(this.form.invalid) return;
-
-        // const credential: Credential = {
-        //     email: this.form.value.email || "",
-        //     password: this.form.value.password || "",
-        // }
-
-        // try {
-        //     const userCredential = await this.authService.signUpWithEmailAndPassword(credential);
-        //     console.log(userCredential);
-        //     this._router.navigateByUrl('/');
-        // } catch (error) {
-        //     console.error(error);
-        // }
-
-        // console.log(this.form.value)
+    async signUp() {
+      try {
+        await this.authService.registerUser(this.form);
+        console.log('Usuario registrado con éxito');
+        this.router.navigateByUrl('/home')
+      } catch (error) {
+        console.error(error);
+      }
     }
 }

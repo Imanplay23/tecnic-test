@@ -2,12 +2,12 @@
   <div class="form">
     <h1>Sign Up</h1>
     <div class="form-container">
-      <form>
+      <form [formGroup]="form" (ngSubmit)="signUp()">
         <ion-item>
           <ion-label position="floating"
             >Nombre completo <ion-text color="danger">*</ion-text></ion-label
           >
-          <ion-input required formControlName="names" type="text"></ion-input>
+          <ion-input required formControlName="fullNames" type="text"></ion-input>
         </ion-item>
 
         <ion-item>

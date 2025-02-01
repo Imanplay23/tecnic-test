@@ -4,7 +4,9 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { LoginForm } from 'src/app/interfaces/users.interface';
+import { Credential, LoginForm } from 'src/app/interfaces/users.interface';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: false,
@@ -17,7 +19,7 @@ export class LoginPage  {
 
   formBuilder = inject(FormBuilder);
 
-  constructor() { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   form: FormGroup<LoginForm> = this.formBuilder.group({
     email: this.formBuilder.control('', {
@@ -43,19 +45,13 @@ get isEmailValid(): string | boolean {
     return false;
 }
 
-async logIn(): Promise<void> {
-    if(this.form.invalid) return;
-    
-    // const credential: Credential = {
-    //     email: this.form.value.email || "",
-    //     password: this.form.value.password || "",
-    // }
-    // try {
-    //     const userCredential = await this.authService.logInWithEmailAndPassword(credential);
-    //     console.log(userCredential);
-    //     this._router.navigateByUrl('/');
-    // } catch (error) {
-    //     console.error(error)
-    // }
+async login() {
+  const isAuthenticated = await this.authService.login(this.form);
+  if (isAuthenticated) {
+    console.log('Inicio de sesión exitoso');
+  } else {
+    console.log('Usuario o contraseña incorrectos');
+  }
+  this.router.navigateByUrl('/home');
 }
 }
