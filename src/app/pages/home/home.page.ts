@@ -14,4 +14,8 @@ export class HomePage {
   goToProfile(){
     this.navCtrl.navigateForward('/profile')
   }
+
+  logOut() {
+    this.navCtrl.navigateBack('/login')
+  }
 }

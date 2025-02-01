@@ -3,12 +3,23 @@
     <ion-toolbar>
       <ion-title>Menu Content</ion-title>
       <ion-menu-toggle slot="start">
-        <ion-icon size="large" class="ion-padding" name="close-outline"></ion-icon>
+        <ion-icon
+          size="large"
+          class="ion-padding"
+          name="close-outline"
+        ></ion-icon>
       </ion-menu-toggle>
     </ion-toolbar>
   </ion-header>
+
   <ion-content class="ion-padding">
-    <ion-button (click)="goToProfile()"><ion-icon size="large" name="person-circle-sharp"></ion-icon>Perfil</ion-button>
+    <ion-item (click)="goToProfile()">
+      <ion-icon size="large" name="person-circle-sharp"></ion-icon
+      >Perfil</ion-item>
+      <ion-item (click)="logOut()">
+        <ion-icon name="log-out-outline"></ion-icon> 
+        Cerrar sesion
+      </ion-item>
   </ion-content>
 </ion-menu>
 
@@ -22,7 +33,5 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content class="ion-padding">
-     Tap the button in the toolbar to open the menu. 
-    </ion-content>
+  <ion-content class="ion-padding"> </ion-content>
 </div>
