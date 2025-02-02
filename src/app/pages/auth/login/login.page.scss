@@ -1,0 +1,75 @@
+* {
+    color: black;
+  }
+  
+  $primary-color: #4285f4;
+  
+  ion-content {
+    --background: white;
+    display: flex;
+    .form {
+      background: white;
+      margin: 2rem 1rem;
+      margin-top: 10rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      h1 {
+        color: #1a237e;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+    }
+  }
+  
+  ion-item {
+    --background: white;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+  }
+  
+  ion-label {
+    color: black;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  ion-button {
+    border-radius: 5rem;
+    --box-shadow: none;
+    --padding-top: 1rem;
+    --padding-bottom: 1rem;
+    margin: 1.5rem 0;
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: capitalize;
+    text-align: center;
+  }
+  
+  .small-text.log-in-redirect {
+    text-align: center;
+    font-size: 1rem;
+    color: #333333;
+    margin-top: 1rem;
+  
+    a {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: 500;
+    }
+  }
+  
+  ion-icon {
+    transform: scale(1.5) translate(-10px, 0px);
+  }
+  
+  .input-icons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .icon {
+    font-size: 20px;
+  }
+  

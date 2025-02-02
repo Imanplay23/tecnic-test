@@ -27,10 +27,23 @@ export class LoginPage  {
         nonNullable: true,
     }),
     password: this.formBuilder.control('', {
-        validators: Validators.required,
+        validators: [Validators.required, Validators.minLength(6)],
         nonNullable: true,
     })
 })
+
+get isPasswordValid(): string | boolean {
+  const control = this.form.get('password');
+
+  const isInvalid = control?.invalid && control.touched;
+
+  if(isInvalid) {
+      return control.hasError('required')
+      ? 'Contraseña incorrecta'
+      : '';
+  }
+  return false;
+}
 
 get isEmailValid(): string | boolean {
     const control = this.form.get('email');

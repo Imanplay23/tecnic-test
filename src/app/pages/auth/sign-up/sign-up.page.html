@@ -4,51 +4,85 @@
     <div class="form-container">
       <form [formGroup]="form" (ngSubmit)="signUp()">
         <ion-item>
-          <ion-label position="floating"
+          <ion-label class="label" position="floating"
             >Nombre completo <ion-text color="danger">*</ion-text></ion-label
           >
-          <ion-input required formControlName="fullNames" type="text"></ion-input>
+          <ion-input
+            required
+            formControlName="fullNames"
+            type="text"
+          ></ion-input>
+          <div *ngIf="form.controls.fullNames.invalid && form.controls.fullNames.touched">
+            <small>El nombre es obligatorio</small>
+          </div>
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating"
-            >Email <ion-text color="danger">*</ion-text></ion-label
+          <ion-label class="label" position="floating"
+            >Email <ion-text color="danger"></ion-text></ion-label
           >
           <ion-input required formControlName="email" type="text"></ion-input>
+          <div *ngIf="isEmailValid as message">
+            <small>{{ message }}</small>
+          </div>
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Numero de telefono (opcional)</ion-label>
+          <ion-label class="label" position="floating"> 
+            Numero de telefono (opcional)</ion-label>
           <ion-input formControlName="telNumber" type="text"></ion-input>
         </ion-item>
 
         <ion-item class="password-item">
-          <ion-label position="floating">Contraseña <ion-text color="danger">*</ion-text></ion-label>
+          <ion-label class="label" position="floating"
+            >Contraseña <ion-text color="danger">*</ion-text></ion-label
+          >
           <ion-input
             required
             formControlName="password"
-            [type]="!passwordShown ? 'password' : 'text'">
+            [type]="!passwordShown ? 'password' : 'text'"
+          >
             <div slot="end" class="input-icons">
-              <ion-icon class="icon" slot="end" color="signup" [name]=" passwordShown === true ? 'eye' : 'eye-off'"
-                (click)="togglePassword()"></ion-icon>
+              <ion-icon
+                class="icon"
+                slot="end"
+                [color]="passwordShown ? 'black' : 'medium' "
+                [name]=" passwordShown ? 'eye' : 'eye-off'"
+                (click)="togglePassword()"
+              ></ion-icon>
             </div>
           </ion-input>
+          <div *ngIf="isPasswordValid as message">
+            <small>{{ message }}</small>
+          </div>
         </ion-item>
 
         <ion-item class="password-item">
-          <ion-label position="floating">Confirmar contraseña <ion-text color="danger">*</ion-text></ion-label>
+          <ion-label class="label" position="floating"
+            >Confirmar contraseña
+            <ion-text color="danger">*</ion-text></ion-label
+          >
           <ion-input
             required
             formControlName="confirmPassword"
-            [type]="!passwordShown ? 'password' : 'text'">
+            [type]="!passwordShown ? 'password' : 'text'"
+          >
             <div slot="end" class="input-icons">
-              <ion-icon class="icon" slot="end" color="signup" [name]=" passwordShown === true ? 'eye' : 'eye-off'"
-                (click)="togglePassword()"></ion-icon>
+              <ion-icon
+                class="icon"
+                slot="end"
+                [color]="passwordShown ? 'black' : 'medium' "
+                [name]=" passwordShown ? 'eye' : 'eye-off'"
+                (click)="togglePassword()"
+              ></ion-icon>
             </div>
-        </ion-input>
+          </ion-input>
+          <div *ngIf="isPasswordValid as message">
+            <small>{{ message }}</small>
+          </div>
         </ion-item>
 
-        <ion-button block color="primary" type="submit" [disabled]="">
+        <ion-button expand="full" type="submit" [disabled]="form.invalid">
           Sing Up
         </ion-button>
       </form>

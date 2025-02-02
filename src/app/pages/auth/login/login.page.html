@@ -6,12 +6,18 @@
       <ion-item>
         <ion-label position="floating">Email <ion-text color="danger">*</ion-text></ion-label>
         <ion-input required formControlName="email" type="text"></ion-input>
+        <div *ngIf="isEmailValid as message">
+          <small>{{ message }}</small>
+        </div>
       </ion-item>
       <ion-item>
         <ion-label position="floating">Contraseña <ion-text color="danger">*</ion-text></ion-label>
         <ion-input required formControlName="password" type="text"></ion-input>
+        <div *ngIf="isPasswordValid as message">
+          <small>{{ message }}</small>
+        </div>
       </ion-item>
-      <ion-button block color="primary"  type="submit" [disabled]="">
+      <ion-button expand="full" color="primary"  type="submit" [disabled]="form.invalid">
         Login
       </ion-button>
     </form>

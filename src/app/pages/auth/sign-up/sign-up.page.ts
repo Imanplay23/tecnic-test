@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { 
+  AbstractControl,
   FormBuilder, 
   FormGroup,
+  ValidationErrors,
   Validators
 } from '@angular/forms';
-import { Credential, SignUpData, SingUpForm } from 'src/app/interfaces/users.interface';
+import { SingUpForm } from 'src/app/interfaces/users.interface';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -32,11 +34,10 @@ export class SignUpPage {
             nonNullable: true,
         }),
         telNumber: this.formBuilder.control('', {
-          validators: Validators.required,
           nonNullable: true,
       }),
         password: this.formBuilder.control('', {
-            validators: Validators.required,
+            validators: [Validators.required, Validators.minLength(6),],
             nonNullable: true,
         }),
         confirmPassword: this.formBuilder.control('', {
@@ -45,6 +46,32 @@ export class SignUpPage {
       }),
     });
 
+    // passwordValidator(control: AbstractControl): ValidationErrors | null {
+    //   const value: string = control.value;
+    //   if (!/[0-9]/.test(value)) {
+    //     return { passwordWeak: true };
+    //   }
+    //   return null;
+    // }
+
+    matchPasswords(group: FormGroup): ValidationErrors | null {
+      const password = group.get('password')?.value;
+      const confirmPassword = group.get('confirmPassword')?.value;
+      return password === confirmPassword ? null : { passwordsMismatch: true };
+    }
+
+    get isPasswordValid(): string | boolean {
+      const control = this.form.get('password');
+
+      const isInvalid = control?.invalid && control.touched;
+
+      if(isInvalid) {
+          return control.hasError('required')
+          ? 'La contraseña es obligatoria'
+          : 'Debe tener al menos 6 caracteres';
+      }
+      return false;
+  }
 
     get isEmailValid(): string | boolean {
         const control = this.form.get('email');
@@ -70,6 +97,11 @@ export class SignUpPage {
     }
 
     async signUp() {
+      if (this.form.invalid) {
+        this.form.markAllAsTouched();
+        return;
+      }
+
       try {
         await this.authService.registerUser(this.form);
         console.log('Usuario registrado con éxito');
