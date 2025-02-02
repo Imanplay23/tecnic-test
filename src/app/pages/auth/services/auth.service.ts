@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { FormGroup } from '@angular/forms';
-import { SingUpForm, LoginForm } from 'src/app/interfaces/users.interface';
+import { SingUpForm, LoginForm, logInData } from 'src/app/interfaces/users.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private _storage: Storage | null = null;
+  private USERS_KEY = 'users';
 
   constructor(private storage: Storage) { 
     this.init()
@@ -41,19 +42,38 @@ export class AuthService {
     await this._storage?.set('users', users);
   }
 
- 
-
-  async login(loginForm: FormGroup<LoginForm>) {
-    if (loginForm.invalid) return false;
-
-    let users = await this._storage?.get('users') || [];
-
-    const { email, password } = loginForm.value;
-
-    return users.some(
-      (user: any) =>
-        (user.email === email || user.telNumber === email) &&
-        user.password === password
+  async login(loginData: logInData): Promise<boolean> {
+    const users = (await this._storage?.get(this.USERS_KEY)) || [];
+  
+    const user = users.find(
+      (u: any) => u.email === loginData.identifier || u.telNumber === loginData.identifier
     );
-  }
+  
+    if (!user) {
+      alert('Usuario no encontrado');
+      return false;
+    }
+  
+    if (user.password !== loginData.password) {
+      alert('Contraseña incorrecta');
+      return false;
+    }
+  
+    alert('¡Inicio de sesión exitoso!');
+    return true;
+  } 
+
+  // async login(loginForm: FormGroup<LoginForm>) {
+  //   if (loginForm.invalid) return false;
+
+  //   let users = await this._storage?.get('users') || [];
+
+  //   const { email, password } = loginForm.value;
+
+  //   return users.some(
+  //     (user: any) =>
+  //       (user.email === email || user.telNumber === email) &&
+  //       user.password === password
+  //   );
+  // }
 }

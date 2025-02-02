@@ -4,7 +4,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { Credential, LoginForm } from 'src/app/interfaces/users.interface';
+import { Credential, logInData, LoginForm } from 'src/app/interfaces/users.interface';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -58,13 +58,30 @@ get isEmailValid(): string | boolean {
     return false;
 }
 
-async login() {
-  const isAuthenticated = await this.authService.login(this.form);
-  if (isAuthenticated) {
-    console.log('Inicio de sesión exitoso');
-  } else {
-    console.log('Usuario o contraseña incorrectos');
+// async login() {
+//   const isAuthenticated = await this.authService.login(this.form);
+//   if (isAuthenticated) {
+//     console.log('Inicio de sesión exitoso');
+//   } else {
+//     console.log('Usuario o contraseña incorrectos');
+//   }
+//   this.router.navigateByUrl('/home');
+// }
+login() {
+  if (this.form.invalid) {
+    alert('Por favor completa todos los campos correctamente.');
+    return;
   }
-  this.router.navigateByUrl('/home');
+
+  const loginData: logInData = {
+    identifier: this.form.value.email || "", // Puede ser email o teléfono
+    password: this.form.value.password || "",
+  };
+
+  this.authService.login(loginData).then((success) => {
+    if (success) {
+      this.router.navigate(['/home']); // Redirigir solo si el login es exitoso
+    }
+  });
 }
 }
