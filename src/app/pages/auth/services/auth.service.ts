@@ -44,7 +44,8 @@ export class AuthService {
 
   async login(loginData: logInData): Promise<boolean> {
     const users = (await this._storage?.get(this.USERS_KEY)) || [];
-  
+    console.log('Usuarios en Storage:', users);
+
     const user = users.find(
       (u: any) => u.email === loginData.identifier || u.telNumber === loginData.identifier
     );
@@ -58,11 +59,32 @@ export class AuthService {
       alert('Contraseña incorrecta');
       return false;
     }
-  
+    
+    await this._storage?.set('loggedInUser', user.email);
+    console.log('Usuario logueado guardado en Storage:', user.email);
+
     alert('¡Inicio de sesión exitoso!');
     return true;
   } 
 
+  async getCurrentUser() {
+    const loggedInEmail = await this._storage?.get('loggedInUser');
+    console.log('Email del usuario logueado en Storage:', loggedInEmail);
+  
+    if (!loggedInEmail) return null;
+  
+    const users = (await this._storage?.get(this.USERS_KEY)) || [];
+    console.log('Usuarios guardados:', users);
+  
+    const currentUser = users.find((user: any) => user.email === loggedInEmail);
+    console.log('Usuario obtenido en getCurrentUser:', currentUser);
+  
+    return currentUser || null;
+  }
+
+  async logout() {
+    await this._storage?.remove('loggedInUser');
+  }
   // async login(loginForm: FormGroup<LoginForm>) {
   //   if (loginForm.invalid) return false;
 

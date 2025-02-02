@@ -1,27 +1,153 @@
-#container {
-  text-align: center;
+// Variables
+$primary-color: #3880ff;
+$secondary-color: #3dc2ff;
+$text-color: #333333;
+$background-light: #ffffff;
+$menu-background: #f5f5f5;
+$card-background: #ffffff;
+$shadow-color: rgba(0, 0, 0, 0.1);
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+// Estilos del menú lateral
+ion-menu {
+  --background: #{$menu-background};
+  
+  ion-content {
+    --background: #{$menu-background};
+  }
+
+  ion-item {
+    --background: transparent;
+    --color: #{$text-color};
+    margin: 8px 0;
+    border-radius: 8px;
+    
+    &:hover {
+      --background: rgba(56, 128, 255, 0.1);
+    }
+    
+    ion-icon {
+      color: $primary-color;
+      margin-right: 8px;
+    }
+  }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+// Estilos de la página de inicio
+.home-content {
+  --background: #{$background-light};
+  
+  .welcome-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    
+    .welcome-title {
+      color: $text-color;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      animation: fadeIn 1s ease-in;
+      font-weight: 600;
+    }
+    
+    .welcome-card {
+      background: $card-background;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 20px $shadow-color;
+      
+      .welcome-icon {
+        font-size: 4rem;
+        color: $primary-color;
+        margin-bottom: 1rem;
+        display: block;
+        margin: 0 auto;
+      }
+      
+      .welcome-text {
+        color: $text-color;
+        text-align: center;
+        margin: 1rem 0;
+        line-height: 1.6;
+      }
+      
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+        
+        .feature-item {
+          text-align: center;
+          padding: 1rem;
+          background: rgba(56, 128, 255, 0.05);
+          border-radius: 12px;
+          transition: transform 0.2s ease;
+          
+          &:hover {
+            transform: translateY(-5px);
+          }
+          
+          ion-icon {
+            font-size: 2rem;
+            color: $primary-color;
+            margin-bottom: 0.5rem;
+          }
+          
+          h3 {
+            color: $text-color;
+            margin: 0.5rem 0;
+            font-weight: 500;
+          }
+          
+          p {
+            color: rgba(51, 51, 51, 0.8);
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+// Animaciones
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-#container a {
-  text-decoration: none;
+// Media queries para responsividad
+@media (max-width: 768px) {
+  .welcome-container {
+    .welcome-title {
+      font-size: 2rem;
+    }
+    
+    .welcome-card {
+      padding: 1.5rem;
+    }
+  }
+}
+
+// Estilos adicionales para mejor contraste en tema claro
+ion-toolbar {
+  --background: #{$background-light};
+  --color: #{$text-color};
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+ion-title {
+  color: $text-color;
+  font-weight: 500;
 }
