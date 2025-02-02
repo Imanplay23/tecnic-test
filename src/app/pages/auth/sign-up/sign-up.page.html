@@ -3,6 +3,16 @@
     <h1>Sign Up</h1>
     <div class="form-container">
       <form [formGroup]="form" (ngSubmit)="signUp()">
+
+        <div class="photo-upload">
+          <div class="photo-circle">
+            <img *ngIf="photoPreview" [src]="photoPreview" class="profile-img"/>
+            <ion-icon *ngIf="!photoPreview" name="add-outline"></ion-icon>
+            <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+          </div>
+          <span class="photo-text">Add profile photo</span>
+        </div>
+
         <ion-item>
           <ion-label class="label" position="floating"
             >Nombre completo <ion-text color="danger">*</ion-text></ion-label

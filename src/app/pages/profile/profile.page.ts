@@ -9,17 +9,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-  user: any = null; // Inicializado en null, pero se actualizará con `getCurrentUser()`
+  user: any = null;
 
   constructor(private authService: AuthService) {}
 
   async ngOnInit() {
     this.user = await this.authService.getCurrentUser();
-    console.log('Usuario en perfil:', this.user);
+    console.log('Usuario en perfil:', this.user);  
   }
 
   async logout() {
     await this.authService.logout();
-    this.user = null; // Limpia los datos del usuario en la vista
+    this.user = null;
   }
 }

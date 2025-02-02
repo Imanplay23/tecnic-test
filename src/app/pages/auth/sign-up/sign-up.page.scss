@@ -3,6 +3,60 @@
 }
 
 $primary-color: #4285f4;
+$danger-color: #dc3545;
+$border-color: #e0e0e0;
+$text-color: #333333;
+
+.photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0;
+
+  .photo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1.5px dashed #ccc;
+    position: relative;
+    margin-bottom: 8px;
+    
+    // Mejora del centrado del icono
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    ion-icon {
+      color: #666;
+      font-size: 24px;
+      // Eliminar cualquier margen o padding que Ionic pueda estar agregando
+      margin: 0;
+      padding: 0;
+      // Asegurar que el icono esté en el centro absoluto
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    input[type="file"] {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+  }
+
+  .photo-text {
+    color: #666;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+}
 
 ion-content {
   --background: white;

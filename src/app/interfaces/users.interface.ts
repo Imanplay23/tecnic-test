@@ -8,6 +8,7 @@ export interface SingUpForm {
   telNumber: FormControl<string>,
   password: FormControl<string>,
   confirmPassword: FormControl<string>,
+  profilePhoto: FormControl<string | null>,
 }
 
 export interface LoginForm {

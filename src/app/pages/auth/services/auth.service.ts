@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { FormGroup } from '@angular/forms';
-import { SingUpForm, LoginForm, logInData } from 'src/app/interfaces/users.interface';
+import { SingUpForm, logInData } from 'src/app/interfaces/users.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class AuthService {
   private USERS_KEY = 'users';
 
   constructor(private storage: Storage) { 
-    this.init()
+    this.init();
   }
 
   async init() {
@@ -21,9 +21,9 @@ export class AuthService {
   async registerUser(signUpForm: FormGroup<SingUpForm>) {
     if (signUpForm.invalid) return;
 
-    let users = await this._storage?.get('users') || [];
+    let users = await this._storage?.get(this.USERS_KEY) || [];
 
-    const { fullNames, email, telNumber, password, confirmPassword } = signUpForm.value;
+    const { fullNames, email, telNumber, password, confirmPassword, profilePhoto } = signUpForm.value;
 
     if (password !== confirmPassword) {
       throw new Error('Las contraseñas no coinciden');
@@ -37,9 +37,9 @@ export class AuthService {
       throw new Error('El email o número de teléfono ya está registrado.');
     }
 
-    users.push({ fullNames, email, telNumber, password });
+    users.push({ fullNames, email, telNumber, password, profilePhoto });
 
-    await this._storage?.set('users', users);
+    await this._storage?.set(this.USERS_KEY, users);
   }
 
   async login(loginData: logInData): Promise<boolean> {
@@ -85,6 +85,8 @@ export class AuthService {
   async logout() {
     await this._storage?.remove('loggedInUser');
   }
+}
+
   // async login(loginForm: FormGroup<LoginForm>) {
   //   if (loginForm.invalid) return false;
 
@@ -98,4 +100,3 @@ export class AuthService {
   //       user.password === password
   //   );
   // }
-}

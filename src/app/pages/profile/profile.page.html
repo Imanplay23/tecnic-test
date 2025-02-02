@@ -10,8 +10,9 @@
 <ion-content class="ion-padding profile-content">
   <div class="profile-container" *ngIf="user">
     <div class="profile-header">
-      <div class="profile-avatar">
-        <ion-icon name="person" class="avatar-icon"></ion-icon>
+      <div class="photo-container">
+        <img *ngIf="user.profilePhoto" [src]="user.profilePhoto" class="profile-img"/>
+        <div *ngIf="!user.profilePhoto" class="photo-placeholder"></div>
       </div>
     </div>
 
@@ -21,7 +22,6 @@
           <div class="info-item">
             <ion-icon name="person-outline" class="info-icon"></ion-icon>
             <div class="info-content">
-              <label>Nombre Completo</label>
               <p>{{ user.fullNames }}</p>
             </div>
           </div>
@@ -29,7 +29,6 @@
           <div class="info-item">
             <ion-icon name="mail-outline" class="info-icon"></ion-icon>
             <div class="info-content">
-              <label>Correo Electrónico</label>
               <p>{{ user.email }}</p>
             </div>
           </div>
@@ -37,7 +36,6 @@
           <div class="info-item">
             <ion-icon name="call-outline" class="info-icon"></ion-icon>
             <div class="info-content">
-              <label>Teléfono</label>
               <p>{{ user.telNumber | telephoneNumber }}</p>
             </div>
           </div>
@@ -46,28 +44,14 @@
     </ion-card>
 
     <ion-button expand="full" color="danger" (click)="logout()" class="logout-button">
-      <ion-icon name="log-out-outline"></ion-icon> 
-       Cerrar Sesión
+      Cerrar Sesión
     </ion-button>
   </div>
 
-  <!-- Mensaje de carga o error cuando no hay usuario -->
   <div class="loading-container" *ngIf="!user">
     <ion-spinner></ion-spinner>
     <p>Cargando información del usuario...</p>
   </div>
 </ion-content>
 
-<!-- <ion-content>
-  <ion-card *ngIf="user">
-    <ion-card-header>
-      <ion-card-title>{{ user.fullNames }}</ion-card-title>
-      <ion-card-subtitle>{{ user.email }}</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Teléfono:</strong> {{ user.telNumber || 'No registrado' }}</p>
-    </ion-card-content>
-  </ion-card>
 
-  <ion-button expand="full" color="danger" (click)="logout()">Cerrar sesión</ion-button>
-</ion-content> -->
