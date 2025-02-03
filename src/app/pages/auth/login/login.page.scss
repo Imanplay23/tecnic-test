@@ -59,6 +59,10 @@
       font-weight: 500;
     }
   }
+
+  ion-header {
+    padding-top: env(safe-area-inset-top);
+  }
   
   ion-icon {
     transform: scale(1.5) translate(-10px, 0px);

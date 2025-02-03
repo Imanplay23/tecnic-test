@@ -1,3 +1,7 @@
+ion-header {
+  padding-top: env(safe-area-inset-top);
+}
+
 .profile-content {
   --background: #ffffff;
 
