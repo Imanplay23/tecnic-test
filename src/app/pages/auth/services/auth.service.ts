@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { NativeBiometric } from 'capacitor-native-biometric';
 import { Storage } from '@ionic/storage';
 import { FormGroup } from '@angular/forms';
 import { SingUpForm, logInData } from 'src/app/interfaces/users.interface';
@@ -85,61 +84,9 @@ export class AuthService {
 
   async logout() {
     await this._storage?.remove('loggedInUser');
-    await NativeBiometric.deleteCredentials({ server: 'app.auth' });
-  }
-
-  async enableBiometricLogin(identifier: string, password: string) {
-    try {
-      await NativeBiometric.setCredentials({
-        username: identifier,
-        password: password,
-        server: 'app.auth'
-      });
-      console.log('Credenciales guardadas para autenticación biométrica');
-    } catch (error) {
-      console.error('Error guardando credenciales:', error);
-    }
-  }
-
-  async quickLogin(): Promise<boolean> {
-    try {
-      const isAvailable = await this.isBiometricAvailable();
-      if (!isAvailable) {
-        console.warn('Biometría no disponible');
-        return false;
-      }
-
-      const credentials = await NativeBiometric.getCredentials({
-        server: 'app.auth'
-      });
-
-      if (!credentials.username || !credentials.password) {
-        console.warn('No hay credenciales guardadas');
-        return false;
-      }
-
-      const loginData: logInData = {
-        identifier: credentials.username,
-        password: credentials.password
-      };
-
-      return this.login(loginData);
-    } catch (error) {
-      console.error('Error obteniendo credenciales:', error);
-      return false;
-    }
-  }
-
-  async isBiometricAvailable(): Promise<boolean> {
-    try {
-      const result = await NativeBiometric.isAvailable();
-      return result.isAvailable;
-    } catch (error) {
-      console.error('Error verificando biometría:', error);
-      return false;
-    }
   }
 }
+
 
   // async login(loginForm: FormGroup<LoginForm>) {
   //   if (loginForm.invalid) return false;

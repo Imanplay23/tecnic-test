@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { AuthService } from '../auth/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -21,13 +22,18 @@ export class HomePage {
       case 'complete': return 'completado'
     }
   }
-  constructor( private navCtrl: NavController,private alertCtrl: AlertController ) {}
+  constructor( 
+    private navCtrl: NavController,
+    private alertCtrl: AlertController,
+    private authService: AuthService
+  ) {}
 
   goToProfile(){
     this.navCtrl.navigateForward('/profile')
   }
 
   logOut() {
+    this.authService.logout()
     this.navCtrl.navigateBack('/login')
   }
 

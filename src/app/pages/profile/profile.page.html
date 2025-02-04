@@ -1,13 +1,17 @@
-<ion-header mode="ios" [translucent]="true">
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Profile</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button>Atras</ion-back-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+
 
 <ion-content class="ion-padding profile-content">
+  <ion-fab-button (click)="closeProfile()">
+    <ion-icon name="close"></ion-icon>
+  </ion-fab-button>
   <div class="profile-container" *ngIf="user">
     <div class="profile-header">
       <div class="photo-container">
@@ -44,6 +48,7 @@
     </ion-card>
 
     <ion-button expand="full" color="danger" (click)="logout()" class="logout-button">
+      <ion-icon name="log-out-outline"></ion-icon> 
       Cerrar Sesión
     </ion-button>
   </div>

@@ -33,15 +33,15 @@ ion-menu {
 }
 
 // Estilos de la página de inicio
-ion-header {
-  padding-top: env(safe-area-inset-top);
-}
+// ion-header {
+//   padding-top: env(safe-area-inset-top);
+// }
 
 .home-content {
   --background: #{$background-light};
+  padding-top: env(safe-area-inset-top);
   
   .welcome-container {
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -51,9 +51,9 @@ ion-header {
     .welcome-title {
       color: $text-color;
       font-size: 2.5rem;
+      margin-top: 4rem;
       margin-bottom: 2rem;
       text-align: center;
-      animation: fadeIn 1s ease-in;
       font-weight: 600;
     }
     
@@ -120,29 +120,29 @@ ion-header {
 }
 
 // Animaciones
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+// @keyframes fadeIn {
+//   from {
+//     opacity: 0;
+//     transform: translateY(20px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
 
 // Media queries para responsividad
-@media (max-width: 768px) {
-  .welcome-container {
-    .welcome-title {
-      font-size: 2rem;
-    }
+// @media (max-width: 768px) {
+//   .welcome-container {
+//     .welcome-title {
+//       font-size: 2rem;
+//     }
     
-    .welcome-card {
-      padding: 1.5rem;
-    }
-  }
-}
+//     .welcome-card {
+//       padding: 1.5rem;
+//     }
+//   }
+// }
 
 // Estilos adicionales para mejor contraste en tema claro
 ion-toolbar {

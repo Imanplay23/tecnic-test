@@ -1,29 +1,30 @@
 <ion-content [fullscreen]="true">
- <div class="form">
-  <div class="form-container">
-    <h1>Log In</h1>
-    <form [formGroup]="form" (ngSubmit)="login()">
-      <ion-item>
-        <ion-label position="floating">Email <ion-text color="danger">*</ion-text></ion-label>
-        <ion-input required formControlName="email" type="text"></ion-input>
-        <div *ngIf="isEmailValid as message">
-          <small>{{ message }}</small>
-        </div>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Contraseña <ion-text color="danger">*</ion-text></ion-label>
-        <ion-input required formControlName="password" type="text"></ion-input>
-        <div *ngIf="isPasswordValid as message">
-          <small>{{ message }}</small>
-        </div>
-      </ion-item>
-      <ion-button expand="full" color="primary"  type="submit" [disabled]="form.invalid">
-        Login
-      </ion-button>
-    </form>
+  <div class="form">
+   <div class="form-container">
+     <h1>Log In</h1>
+     <form [formGroup]="form" (ngSubmit)="login()">
+       <ion-item>
+         <ion-label position="floating">Email <ion-text color="danger">*</ion-text></ion-label>
+         <ion-input required formControlName="email" type="text"></ion-input>
+         <div *ngIf="isEmailValid as message">
+           <small>{{ message }}</small>
+         </div>
+       </ion-item>
+       <ion-item>
+         <ion-label position="floating">Contraseña <ion-text color="danger">*</ion-text></ion-label>
+         <ion-input required formControlName="password" type="text"></ion-input>
+         <div *ngIf="isPasswordValid as message">
+           <small>{{ message }}</small>
+         </div>
+       </ion-item>
+       <ion-button expand="full" color="primary"  type="submit" [disabled]="form.invalid">
+         Login
+       </ion-button>
+     </form>
+   </div>
+   <span class="small-text log-in-redirect">
+     Don't have an account yet? <a routerLink="/sign-up">Sign Up</a>
+   </span>
   </div>
-  <span class="small-text log-in-redirect">
-    Don't have an account yet? <a routerLink="/sign-up">Sign Up</a>
-  </span>
- </div>
-</ion-content>
+ </ion-content>
+ 

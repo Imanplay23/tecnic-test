@@ -1,13 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { 
   FormBuilder, 
   FormGroup,
   Validators
 } from '@angular/forms';
-import { logInData, LoginForm } from 'src/app/interfaces/users.interface';
+import { Credential, logInData, LoginForm } from 'src/app/interfaces/users.interface';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
 
 @Component({
   standalone: false,
@@ -15,101 +14,74 @@ import { Platform } from '@ionic/angular';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
-
-  isBiometricAvailable: boolean = false;
-  platformIcon: string = 'finger-print';
+export class LoginPage  {
+  hide: boolean = true
 
   formBuilder = inject(FormBuilder);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private platform: Platform
-  ) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   form: FormGroup<LoginForm> = this.formBuilder.group({
     email: this.formBuilder.control('', {
-      validators: [Validators.required, Validators.email],
-      nonNullable: true,
+        validators: [Validators.required, Validators.email],
+        nonNullable: true,
     }),
     password: this.formBuilder.control('', {
-      validators: [Validators.required, Validators.minLength(6)],
-      nonNullable: true,
+        validators: [Validators.required, Validators.minLength(6)],
+        nonNullable: true,
     })
-  });
+})
 
-  ngOnInit() {
-    this.checkBiometricAvailability();
-    this.setPlatformIcon();
-  }
+get isPasswordValid(): string | boolean {
+  const control = this.form.get('password');
 
-  async checkBiometricAvailability() {
-    this.isBiometricAvailable = await this.authService.isBiometricAvailable();
-  }
+  const isInvalid = control?.invalid && control.touched;
 
-  setPlatformIcon() {
-    if (this.platform.is('ios')) {
-      this.platformIcon = 'lock-open-outline'; 
-    } else if (this.platform.is('android')) {
-      this.platformIcon = 'finger-print'; 
-    }
-  }
-
-  get isPasswordValid(): string | boolean {
-    const control = this.form.get('password');
-    const isInvalid = control?.invalid && control.touched;
-
-    if (isInvalid) {
+  if(isInvalid) {
       return control.hasError('required')
-        ? 'Contraseña incorrecta'
-        : '';
-    }
-    return false;
+      ? 'Contraseña incorrecta'
+      : '';
   }
+  return false;
+}
 
-  get isEmailValid(): string | boolean {
+get isEmailValid(): string | boolean {
     const control = this.form.get('email');
+
     const isInvalid = control?.invalid && control.touched;
 
-    if (isInvalid) {
-      return control.hasError('required')
-        ? 'Este campo es obligatorio'
-        : 'Ingresa un email válido';
+    if(isInvalid) {
+        return control.hasError('required')
+        ? 'This field is required'
+        : 'Enter a valid email';
     }
     return false;
+}
+
+// async login() {
+//   const isAuthenticated = await this.authService.login(this.form);
+//   if (isAuthenticated) {
+//     console.log('Inicio de sesión exitoso');
+//   } else {
+//     console.log('Usuario o contraseña incorrectos');
+//   }
+//   this.router.navigateByUrl('/home');
+// }
+login() {
+  if (this.form.invalid) {
+    alert('Por favor completa todos los campos correctamente.');
+    return;
   }
 
-  login() {
-    if (this.form.invalid) {
-      alert('Por favor completa todos los campos correctamente.');
-      return;
-    }
+  const loginData: logInData = {
+    identifier: this.form.value.email || "", // Puede ser email o teléfono
+    password: this.form.value.password || "",
+  };
 
-    const loginData: logInData = {
-      identifier: this.form.value.email || "",
-      password: this.form.value.password || "",
-    };
-
-    this.authService.login(loginData).then(async (success) => {
-      if (success) {
-        if (this.isBiometricAvailable) {
-          const saveBiometric = confirm('¿Quieres habilitar el inicio de sesión con huella?');
-          if (saveBiometric) {
-            await this.authService.enableBiometricLogin(loginData.identifier, loginData.password);
-          }
-        }
-        this.router.navigate(['/home']);
-      }
-    });
-  }
-
-  async quickLogin() {
-    const success = await this.authService.quickLogin();
+  this.authService.login(loginData).then((success) => {
     if (success) {
-      this.router.navigate(['/home']);
-    } else {
-      alert('No se pudo iniciar sesión con autenticación biométrica.');
+      this.router.navigate(['/home']); // Redirigir solo si el login es exitoso
     }
-  }
+  });
+}
 }
