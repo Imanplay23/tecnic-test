@@ -5,14 +5,23 @@
      <form [formGroup]="form" (ngSubmit)="login()">
        <ion-item>
          <ion-label position="floating">Email <ion-text color="danger">*</ion-text></ion-label>
-         <ion-input required formControlName="email" type="text"></ion-input>
-         <div *ngIf="isEmailValid as message">
+         <ion-input required formControlName="identifier" type="text"></ion-input>
+         <div *ngIf="isIdentifierValid as message">
            <small>{{ message }}</small>
          </div>
        </ion-item>
        <ion-item>
          <ion-label position="floating">Contraseña <ion-text color="danger">*</ion-text></ion-label>
-         <ion-input required formControlName="password" type="text"></ion-input>
+         <ion-input required formControlName="password" [type]="!passwordShown ? 'password' : 'text'">
+            <div slot="end" class="input-icons">
+              <ion-icon
+                class="icon"
+                slot="end"
+                [color]="passwordShown ? 'black' : 'medium' "
+                [name]=" passwordShown ? 'eye' : 'eye-off'"
+                (click)="togglePassword()"></ion-icon>
+            </div>
+         </ion-input>
          <div *ngIf="isPasswordValid as message">
            <small>{{ message }}</small>
          </div>
@@ -26,5 +35,12 @@
      Don't have an account yet? <a routerLink="/sign-up">Sign Up</a>
    </span>
   </div>
+
+
+    <div class="fab-list" *ngIf="enableFastLogin === true">
+      <ion-fab-button style="width: 5rem; height: 5rem;" color="dark" (click)="loginWithBiometrics()">
+        <ion-icon style="width: 4rem; height: 4rem" name="finger-print-outline" size="large" color="light"></ion-icon>
+      </ion-fab-button>
+    </div>
  </ion-content>
  

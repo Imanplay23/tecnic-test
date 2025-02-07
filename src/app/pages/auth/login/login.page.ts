@@ -4,9 +4,12 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { Credential, logInData, LoginForm } from 'src/app/interfaces/users.interface';
+import { logInData, LoginForm } from 'src/app/interfaces/users.interface';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { AlertController, Platform } from '@ionic/angular';
+import { NativeBiometric } from 'capacitor-native-biometric';
+
 
 @Component({
   standalone: false,
@@ -15,73 +18,163 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage  {
-  hide: boolean = true
+  public passwordType: string = 'password';
+  public passwordShown: boolean = false;
+
+  public isIOS = false;
+  public enableFastLogin = false;
 
   formBuilder = inject(FormBuilder);
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private platform: Platform,
+    private authService: AuthService, 
+    private router: Router, 
+    private alertCtrl: AlertController,
+  ) { 
+    this.isIOS = this.platform.is('ios');
+  }
 
   form: FormGroup<LoginForm> = this.formBuilder.group({
-    email: this.formBuilder.control('', {
-        validators: [Validators.required, Validators.email],
+    identifier: this.formBuilder.control('', {
+        validators: Validators.required,
         nonNullable: true,
     }),
     password: this.formBuilder.control('', {
         validators: [Validators.required, Validators.minLength(6)],
         nonNullable: true,
     })
-})
+  });
 
-get isPasswordValid(): string | boolean {
-  const control = this.form.get('password');
-
-  const isInvalid = control?.invalid && control.touched;
-
-  if(isInvalid) {
-      return control.hasError('required')
-      ? 'Contraseña incorrecta'
-      : '';
+  async ionViewWillEnter(){
+    console.log(this.authService.isBiometricEnabled(this.form.value.identifier as string));
+    if (await this.authService.isBiometricEnabled(this.form.value.identifier as string)) {
+      this.enableFastLogin = true;
+    }
   }
-  return false;
-}
 
-get isEmailValid(): string | boolean {
-    const control = this.form.get('email');
-
+  get isPasswordValid(): string | boolean {
+    const control = this.form.get('password');
     const isInvalid = control?.invalid && control.touched;
-
     if(isInvalid) {
         return control.hasError('required')
-        ? 'This field is required'
-        : 'Enter a valid email';
+        ? 'Contraseña incorrecta'
+        : '';
     }
     return false;
-}
-
-// async login() {
-//   const isAuthenticated = await this.authService.login(this.form);
-//   if (isAuthenticated) {
-//     console.log('Inicio de sesión exitoso');
-//   } else {
-//     console.log('Usuario o contraseña incorrectos');
-//   }
-//   this.router.navigateByUrl('/home');
-// }
-login() {
-  if (this.form.invalid) {
-    alert('Por favor completa todos los campos correctamente.');
-    return;
   }
 
-  const loginData: logInData = {
-    identifier: this.form.value.email || "", // Puede ser email o teléfono
-    password: this.form.value.password || "",
-  };
-
-  this.authService.login(loginData).then((success) => {
-    if (success) {
-      this.router.navigate(['/home']); // Redirigir solo si el login es exitoso
+  get isIdentifierValid(): string | boolean {
+    const control = this.form.get('identifier');
+    const isInvalid = control?.invalid && control.touched;
+    if(isInvalid) {
+        return control.hasError('required')
+        ? 'Este campo es obligatorio'
+        : 'Ingresa un correo o número de teléfono válido';
     }
-  });
-}
+    return false;
+  }
+
+  togglePassword() {
+    this.passwordShown = !this.passwordShown;
+    this.passwordType = this.passwordShown ? 'text' : 'password';
+  }
+
+  async login() {
+    if (this.form.invalid) {
+      alert('Por favor completa todos los campos correctamente.');
+      return;
+    }
+  
+    const loginData: logInData = {
+      identifier: this.form.value.identifier || "", 
+      password: this.form.value.password || "",
+    };
+  
+    const success = await this.authService.login(loginData);
+    if (success) {
+      await this.router.navigate(['/home']);
+      
+      const isBiometricEnabled = await this.authService.isBiometricEnabled(loginData.identifier);
+      if (!isBiometricEnabled) {
+        await this.suggestBiometricAuth(loginData.identifier, loginData.password);
+      }
+    }
+  }
+
+
+  
+  // Autenticacion biometrica
+
+  async suggestBiometricAuth(email: string, password: string) {
+    const alert = await this.alertCtrl.create({
+      header: 'Activar autenticación biométrica',
+      message: '¿Quieres activar el inicio de sesión con biometría?',
+      buttons: [
+        {
+          text: 'No, gracias',
+          role: 'cancel',
+        },
+        {
+          text: 'Sí, activar',
+          handler: async () => {
+            const success = await this.authService.enableBiometricLogin(email, password);
+            if (success) {
+              await this.alertCtrl.create({
+                header: 'Autenticacion biometrica',
+                message: 'Autenticacion biometrica activada correctamente.'
+              });
+            } else {
+              await this.alertCtrl.create({
+                header: 'Autenticacion biometrica',
+                message: 'Eror, no se pudo activar la autenticacion biometrica.'
+              });
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async loginWithBiometrics() {
+    try {
+      const result = await NativeBiometric.isAvailable();
+      if (!result.isAvailable) {
+        alert('La autenticación biométrica no está disponible en este dispositivo.');
+        return;
+      }
+
+      const credentials = await this.authService.getBiometricCredentials();
+      if (!credentials) {
+        alert('No se encontraron credenciales guardadas.');
+        this.enableFastLogin = true;
+        return;
+      }
+
+      try {
+          await NativeBiometric.verifyIdentity({
+          reason: 'Iniciar sesion',
+          title: 'Autenticacion biometrica',
+          description: 'Usa la autenticacion biometrica para iniciar sesion',
+          negativeButtonText: 'Cancelar',
+        })
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      const success = await this.authService.login(credentials);
+      if (success) {
+        await this.router.navigate(['/home']);
+      } else {
+        alert('No se pudo autenticar con biometría.');
+      }
+    } catch (error) {
+      console.error('Error en autenticación biométrica:', error);
+      alert('No se pudo autenticar con biometría.');
+    }
+
+  }
 }

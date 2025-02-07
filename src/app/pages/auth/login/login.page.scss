@@ -64,7 +64,7 @@
     padding-top: env(safe-area-inset-top);
   }
   
-  ion-icon {
+  .icon {
     transform: scale(1.5) translate(-10px, 0px);
   }
   
@@ -73,7 +73,10 @@
     gap: 20px;
   }
   
-  .icon {
-    font-size: 20px;
-  }
   
+  div.fab-list {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

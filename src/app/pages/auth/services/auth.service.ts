@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { NativeBiometric } from 'capacitor-native-biometric';
 import { Storage } from '@ionic/storage';
 import { FormGroup } from '@angular/forms';
 import { SingUpForm, logInData } from 'src/app/interfaces/users.interface';
@@ -42,7 +43,22 @@ export class AuthService {
     await this._storage?.set(this.USERS_KEY, users);
   }
 
+  /*  async login(loginForm: FormGroup<LoginForm>) {
+    if (loginForm.invalid) return false;
+
+    let users = await this._storage?.get('users') || [];
+
+    const { email, password } = loginForm.value;
+
+    return users.some(
+      (user: any) =>
+        (user.email === email || user.telNumber === email) &&
+        user.password === password
+    );
+  }  */
+
   async login(loginData: logInData): Promise<boolean> {
+    
     const users = (await this._storage?.get(this.USERS_KEY)) || [];
     console.log('Usuarios en Storage:', users);
 
@@ -63,7 +79,6 @@ export class AuthService {
     await this._storage?.set('loggedInUser', user.email);
     console.log('Usuario logueado guardado en Storage:', user.email);
 
-    alert('¡Inicio de sesión exitoso!');
     return true;
   } 
 
@@ -85,19 +100,67 @@ export class AuthService {
   async logout() {
     await this._storage?.remove('loggedInUser');
   }
+
+  // autenticacion biometrica
+
+  async enableBiometricLogin(identifier: string, password: string) {
+    try {
+      const isAvailable = await NativeBiometric.isAvailable();
+      if (!isAvailable.isAvailable) {
+        console.log('Autenticación biométrica no disponible en este dispositivo.');
+        return false;
+      }
+  
+      // Guardar credenciales en biometría
+      await NativeBiometric.setCredentials({
+        username: identifier, // Usar el identificador (email o teléfono)
+        password: password,
+        server: 'app.auth',
+      });
+  
+      await NativeBiometric.verifyIdentity({
+        reason: 'Iniciar sesion',
+        title: 'Autenticacion biometrica',
+        description: 'Usa la autenticacion biometrica para iniciar sesion',
+        negativeButtonText: 'Cancelar',
+      });
+  
+      // Guardar en almacenamiento local que este usuario activó biometría
+      let biometricUsers = (await this.storage.get('biometricUsers')) || [];
+      if (!biometricUsers.includes(identifier)) {
+        biometricUsers.push(identifier);
+        await this.storage.set('biometricUsers', biometricUsers);
+      }
+  
+      console.log(`Autenticación biométrica activada para: ${identifier}`);
+      return true;
+    } catch (error) {
+      console.error('Error al activar biometría:', error);
+      return false;
+    }
+  }
+
+  async getBiometricCredentials() {
+    try {
+      const result = await NativeBiometric.getCredentials({ server: 'app.auth' });
+
+      if (!result.username || !result.password) {
+        console.log('No se encontraron credenciales guardadas.');
+        return null;
+      }
+
+      return {
+        identifier: result.username,
+        password: result.password,
+      };
+    } catch (error) {
+      console.error('Error al obtener credenciales biométricas:', error);
+      return null;
+    }
+  }
+
+async isBiometricEnabled(identifier: string): Promise<boolean> {
+  const biometricUsers = (await this.storage.get('biometricUsers')) || [];
+  return biometricUsers.includes(identifier);
 }
-
-
-  // async login(loginForm: FormGroup<LoginForm>) {
-  //   if (loginForm.invalid) return false;
-
-  //   let users = await this._storage?.get('users') || [];
-
-  //   const { email, password } = loginForm.value;
-
-  //   return users.some(
-  //     (user: any) =>
-  //       (user.email === email || user.telNumber === email) &&
-  //       user.password === password
-  //   );
-  // }
+}

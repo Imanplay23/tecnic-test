@@ -12,7 +12,7 @@ export interface SingUpForm {
 }
 
 export interface LoginForm {
-  email: FormControl<string>,
+  identifier: FormControl<any>,
   password: FormControl<string>,
 }
 
