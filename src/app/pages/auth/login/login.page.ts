@@ -96,7 +96,9 @@ export class LoginPage  {
       await this.router.navigate(['/home']);
       
       const isBiometricEnabled = await this.authService.isBiometricEnabled(loginData.identifier);
-      if (!isBiometricEnabled) {
+      const hasRejectedSuggestion = await this.authService.hasBiometricSuggestionBeenRejected(loginData.identifier);
+  
+      if (!isBiometricEnabled && !hasRejectedSuggestion) {
         await this.suggestBiometricAuth(loginData.identifier, loginData.password);
       }
     }
@@ -106,7 +108,7 @@ export class LoginPage  {
   
   // Autenticacion biometrica
 
-  async suggestBiometricAuth(email: string, password: string) {
+  async suggestBiometricAuth(identifier: string, password: string) {
     const alert = await this.alertCtrl.create({
       header: 'Activar autenticación biométrica',
       message: '¿Quieres activar el inicio de sesión con biometría?',
@@ -114,11 +116,14 @@ export class LoginPage  {
         {
           text: 'No, gracias',
           role: 'cancel',
+          handler: async () => {
+            await this.authService.setBiometricSuggestionRejected(identifier);
+          },
         },
         {
           text: 'Sí, activar',
           handler: async () => {
-            const success = await this.authService.enableBiometricLogin(email, password);
+            const success = await this.authService.enableBiometricLogin(identifier, password);
             if (success) {
               await this.alertCtrl.create({
                 header: 'Autenticacion biometrica',

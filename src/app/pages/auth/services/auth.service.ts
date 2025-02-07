@@ -140,6 +140,14 @@ export class AuthService {
     }
   }
 
+  async setBiometricSuggestionRejected(identifier: string) {
+    await this.storage.set(`biometricRejected_${identifier}`, true);
+  }
+  
+  async hasBiometricSuggestionBeenRejected(identifier: string): Promise<boolean> {
+    return (await this.storage.get(`biometricRejected_${identifier}`)) || false;
+  }
+
   async getBiometricCredentials() {
     try {
       const result = await NativeBiometric.getCredentials({ server: 'app.auth' });
