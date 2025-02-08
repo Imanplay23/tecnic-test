@@ -1,22 +1,17 @@
-<!-- <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Profile</ion-title>
-    <ion-buttons slot="start">
-      <ion-back-button>Atras</ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header> -->
-
-
-<ion-content class="ion-padding profile-content">
+ <ion-content class="ion-padding profile-content">
   <ion-fab-button (click)="closeProfile()">
     <ion-icon name="close"></ion-icon>
   </ion-fab-button>
   <div class="profile-container" *ngIf="user">
     <div class="profile-header">
       <div class="photo-container">
-        <img *ngIf="user.profilePhoto" [src]="user.profilePhoto" class="profile-img"/>
+        <img *ngIf="user.profilePhoto" [src]="user.profilePhoto" class="profile-img" />
         <div *ngIf="!user.profilePhoto" class="photo-placeholder"></div>
+        <input *ngIf="isEditing" type="file" (change)="onFileChange($event)" accept="image/*" style="display: none;" #fileInput />
+        <ion-button *ngIf="isEditing" fill="clear" (click)="openFileInput()" class="change-photo-button">
+          <ion-icon name="camera"></ion-icon>
+          {{ user.profilePhoto ? 'Cambiar foto' : 'Agregar foto' }}
+        </ion-button>
       </div>
     </div>
 
@@ -26,31 +21,48 @@
           <div class="info-item">
             <ion-icon name="person-outline" class="info-icon"></ion-icon>
             <div class="info-content">
-              <p>{{ user.fullNames }}</p>
+              <p *ngIf="!isEditing">{{ user.fullNames }}</p>
+              <ion-input *ngIf="isEditing" [(ngModel)]="user.fullNames" placeholder="Nombre completo"></ion-input>
             </div>
           </div>
 
           <div class="info-item">
             <ion-icon name="mail-outline" class="info-icon"></ion-icon>
             <div class="info-content">
-              <p>{{ user.email }}</p>
+              <p *ngIf="!isEditing">{{ user.email }}</p>
+              <ion-input *ngIf="isEditing" [(ngModel)]="user.email" placeholder="Correo electrónico"></ion-input>
             </div>
           </div>
 
           <div class="info-item">
             <ion-icon name="call-outline" class="info-icon"></ion-icon>
             <div class="info-content">
-              <p>{{ user.telNumber | telephoneNumber }}</p>
+              <p *ngIf="!isEditing">{{ user.telNumber | telephoneNumber }}</p>
+              <ion-input *ngIf="isEditing" [(ngModel)]="user.telNumber" placeholder="Número de teléfono"></ion-input>
             </div>
           </div>
         </div>
       </ion-card-content>
     </ion-card>
 
-    <ion-button expand="full" color="danger" (click)="logout()" class="logout-button">
-      <ion-icon name="log-out-outline"></ion-icon> 
-      Cerrar Sesión
-    </ion-button>
+    <div class="action-buttons">
+      <ion-button *ngIf="!isEditing" expand="full" color="primary" (click)="startEditing()">
+        <ion-icon name="create-outline"></ion-icon>
+        Editar Perfil
+      </ion-button>
+      <ion-button *ngIf="isEditing" expand="full" color="success" (click)="saveProfile()">
+        <ion-icon name="save-outline"></ion-icon>
+        Guardar Cambios
+      </ion-button>
+      <ion-button *ngIf="isEditing" expand="full" color="medium" (click)="cancelEditing()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        Cancelar
+      </ion-button>
+      <ion-button expand="full" color="danger" (click)="logout()" class="logout-button">
+        <ion-icon name="log-out-outline"></ion-icon>
+        Cerrar Sesión
+      </ion-button>
+    </div>
   </div>
 
   <div class="loading-container" *ngIf="!user">
@@ -58,5 +70,3 @@
     <p>Cargando información del usuario...</p>
   </div>
 </ion-content>
-
-

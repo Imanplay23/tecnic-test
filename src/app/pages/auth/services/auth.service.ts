@@ -21,41 +21,31 @@ export class AuthService {
 
   async registerUser(signUpForm: FormGroup<SingUpForm>) {
     if (signUpForm.invalid) return;
-
+  
     let users = await this._storage?.get(this.USERS_KEY) || [];
-
+  
     const { fullNames, email, telNumber, password, confirmPassword, profilePhoto } = signUpForm.value;
-
+  
     if (password !== confirmPassword) {
       throw new Error('Las contraseñas no coinciden');
     }
-
+  
     const userExists = users.some(
       (u: any) => u.email === email || u.telNumber === telNumber
     );
-
+  
     if (userExists) {
       throw new Error('El email o número de teléfono ya está registrado.');
     }
-
-    users.push({ fullNames, email, telNumber, password, profilePhoto });
-
+  
+    const newUser = { fullNames, email, telNumber, password, profilePhoto };
+    users.push(newUser);
+  
     await this._storage?.set(this.USERS_KEY, users);
+  
+    await this._storage?.set('loggedInUser', email);
+    console.log('Usuario registrado y logueado:', newUser);
   }
-
-  /*  async login(loginForm: FormGroup<LoginForm>) {
-    if (loginForm.invalid) return false;
-
-    let users = await this._storage?.get('users') || [];
-
-    const { email, password } = loginForm.value;
-
-    return users.some(
-      (user: any) =>
-        (user.email === email || user.telNumber === email) &&
-        user.password === password
-    );
-  }  */
 
   async login(loginData: logInData): Promise<boolean> {
     
@@ -97,6 +87,26 @@ export class AuthService {
     return currentUser || null;
   }
 
+  async updateUser(updatedUser: any) {
+    const users = (await this._storage?.get(this.USERS_KEY)) || [];
+    const userIndex = users.findIndex((u: any) => u.email === updatedUser.email || u.identifier === updatedUser.identifier);
+  
+    if (userIndex !== -1) {
+      users[userIndex] = updatedUser;
+      await this._storage?.set(this.USERS_KEY, users);
+  
+      if (updatedUser.email) {
+        await this._storage?.set('loggedInUser', updatedUser.email);
+      } else if (updatedUser.identifier) {
+        await this._storage?.set('loggedInUser', updatedUser.identifier);
+      }
+  
+      console.log('Usuario actualizado:', updatedUser);
+    } else {
+      console.error('Usuario no encontrado para actualizar');
+    }
+  }
+
   async logout() {
     await this._storage?.remove('loggedInUser');
   }
@@ -111,9 +121,8 @@ export class AuthService {
         return false;
       }
   
-      // Guardar credenciales en biometría
       await NativeBiometric.setCredentials({
-        username: identifier, // Usar el identificador (email o teléfono)
+        username: identifier,
         password: password,
         server: 'app.auth',
       });
@@ -124,8 +133,7 @@ export class AuthService {
         description: 'Usa la autenticacion biometrica para iniciar sesion',
         negativeButtonText: 'Cancelar',
       });
-  
-      // Guardar en almacenamiento local que este usuario activó biometría
+
       let biometricUsers = (await this.storage.get('biometricUsers')) || [];
       if (!biometricUsers.includes(identifier)) {
         biometricUsers.push(identifier);
